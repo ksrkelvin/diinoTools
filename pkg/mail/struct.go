@@ -7,7 +7,7 @@ type Mailler struct {
 	Password string `json:"password"`
 }
 
-func Config(host string, port int, user string, pass string) (mailler *Mailler, err error) {
+func Init(host string, port int, user string, pass string) (mailler *Mailler, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)
