@@ -1,0 +1,24 @@
+package mail
+
+type Mailler struct {
+	Host     string `json:"host"`
+	Port     int    `json:"port"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+func Init(host string, port int, user string, pass string) (mailler *Mailler, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+
+	mailler.Host = host
+	mailler.Port = port
+	mailler.Username = user
+	mailler.Password = pass
+
+	return mailler, err
+
+}
