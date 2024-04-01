@@ -44,7 +44,7 @@ func (p *Diino) InitMail(host string, port int, user string, pass string) (err e
 		}
 	}()
 
-	p.Mailler, err = mail.Init(host, port, user, pass)
+	p.Mailler, err = mail.Config(host, port, user, pass)
 	if err != nil {
 		return err
 	}
