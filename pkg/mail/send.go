@@ -2,7 +2,7 @@ package mail
 
 import mail "github.com/xhit/go-simple-mail/v2"
 
-func (p *Mailler) Send(to []string, cc []string, subject string, body string) (err error) {
+func (p *Mailler) Send(to []string, cc []string, cco bool, subject string, body string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)
@@ -25,6 +25,7 @@ func (p *Mailler) Send(to []string, cc []string, subject string, body string) (e
 	email.SetFrom(p.Username)
 	email.AddTo(to...)
 	email.AddCc(cc...)
+	email.AddBccToHeader = cco
 	email.SetSubject(subject)
 	email.SetBody(mail.TextHTML, body)
 
