@@ -14,7 +14,7 @@ func (p *Mailler) Send(to []string, cc []string, subject string, body string) (e
 	server.Port = p.Port
 	server.Username = p.Username
 	server.Password = p.Password
-	server.Encryption = mail.EncryptionTLS
+	server.Encryption = mail.EncryptionSSLTLS
 
 	smtpClient, err := server.Connect()
 	if err != nil {
