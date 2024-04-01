@@ -23,19 +23,9 @@ func (p *Mailler) Send(to []string, cc []string, subject string, body string) (e
 
 	email := mail.NewMSG()
 	email.SetFrom(p.Username)
-
-	if len(to) == 0 {
-		for _, v := range to {
-			email.AddTo(v)
-		}
-	}
-	if len(cc) == 0 {
-		for _, v := range cc {
-			email.AddTo(v)
-		}
-	}
+	email.AddTo(to...)
+	email.AddCc(cc...)
 	email.SetSubject(subject)
-
 	email.SetBody(mail.TextHTML, body)
 
 	err = email.Send(smtpClient)
