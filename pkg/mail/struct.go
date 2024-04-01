@@ -14,11 +14,13 @@ func Init(host string, port int, user string, pass string) (mailler *Mailler, er
 		}
 	}()
 
-	mailler.Host = host
-	mailler.Port = port
-	mailler.Username = user
-	mailler.Password = pass
+	newMailler := &Mailler{
+		Host:     host,
+		Port:     port,
+		Username: user,
+		Password: pass,
+	}
 
-	return mailler, err
+	return newMailler, err
 
 }
