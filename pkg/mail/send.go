@@ -12,10 +12,11 @@ func (p *Mailler) SendOne(mail string, subject string, body string) (err error) 
 			err = r.(error)
 		}
 	}()
-	p.Send([]string{mail}, []string{}, []string{}, subject, body)
+	p.send([]string{mail}, []string{}, []string{}, subject, body)
 	return
 }
 
+// send type: CC to copy, CCO to copy hidden
 func (p *Mailler) SendMany(mail []string, sendType string, subject string, body string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -24,17 +25,17 @@ func (p *Mailler) SendMany(mail []string, sendType string, subject string, body 
 	}()
 
 	if strings.EqualFold(sendType, "CC") {
-		p.Send([]string{}, mail, []string{}, subject, body)
+		p.send([]string{}, mail, []string{}, subject, body)
 	} else if strings.EqualFold(sendType, "CCO") {
-		p.Send([]string{}, []string{}, mail, subject, body)
+		p.send([]string{}, []string{}, mail, subject, body)
 	} else {
-		p.Send(mail, []string{}, []string{}, subject, body)
+		p.send(mail, []string{}, []string{}, subject, body)
 	}
 
 	return
 }
 
-func (p *Mailler) Send(to []string, cc []string, cco []string, subject string, body string) (err error) {
+func (p *Mailler) send(to []string, cc []string, cco []string, subject string, body string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)
