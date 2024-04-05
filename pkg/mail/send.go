@@ -1,6 +1,38 @@
 package mail
 
-import mail "github.com/xhit/go-simple-mail/v2"
+import (
+	"strings"
+
+	mail "github.com/xhit/go-simple-mail/v2"
+)
+
+func (p *Mailler) SendOne(mail string, subject string, body string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	p.Send([]string{mail}, []string{}, []string{}, subject, body)
+	return
+}
+
+func (p *Mailler) SendMany(mail []string, sendType string, subject string, body string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+
+	if strings.EqualFold(sendType, "CC") {
+		p.Send([]string{}, mail, []string{}, subject, body)
+	} else if strings.EqualFold(sendType, "CCO") {
+		p.Send([]string{}, []string{}, mail, subject, body)
+	} else {
+		p.Send(mail, []string{}, []string{}, subject, body)
+	}
+
+	return
+}
 
 func (p *Mailler) Send(to []string, cc []string, cco []string, subject string, body string) (err error) {
 	defer func() {
