@@ -3,11 +3,13 @@ package diinotools
 import (
 	"github.com/ksrkelvin/diinoTools/pkg/database"
 	"github.com/ksrkelvin/diinoTools/pkg/mail"
+	"github.com/ksrkelvin/diinoTools/pkg/tools"
 )
 
 type Diino struct {
-	Db      *database.DB
-	Mailler *mail.Mailler
+	Db        *database.DB
+	Mailler   *mail.Mailler
+	Converter *tools.Converter
 }
 
 func New() (diino *Diino, err error) {
