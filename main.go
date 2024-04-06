@@ -19,9 +19,9 @@ func New() (diino *Diino, err error) {
 		}
 	}()
 
-	var newDiino = &Diino{}
-	newDiino.Tools = &tools.Tools{}
-
+	var newDiino = &Diino{
+		Tools: &tools.Tools{},
+	}
 	return newDiino, err
 
 }
