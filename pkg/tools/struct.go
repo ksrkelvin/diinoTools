@@ -1,3 +1,3 @@
 package tools
 
-type Converter struct{}
+type Tools struct{}

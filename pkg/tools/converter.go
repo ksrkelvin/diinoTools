@@ -10,7 +10,7 @@ import (
 )
 
 // InterfaceFloat64 - Converte interface{} para Float64
-func (p Converter) InterfaceFloat64(entrada interface{}) (saida float64) {
+func (p Tools) InterfaceFloat64(entrada interface{}) (saida float64) {
 
 	saida = float64(0)
 	switch entrada := entrada.(type) {
@@ -43,7 +43,7 @@ InterfaceString - força uma interface a retornar string
   - entrada: valor de entrada
   - saida: valor no formato [string]
 */
-func (p Converter) InterfaceString(entrada interface{}) (saida string) {
+func (p Tools) InterfaceString(entrada interface{}) (saida string) {
 	saida = ""
 	switch entrada := entrada.(type) {
 	case int32:
@@ -71,7 +71,7 @@ InterfaceTime - força uma interface a retornar time.Time
   - entrada: valor de entrada
   - saida: valor no formato [time.Time]
 */
-func (p Converter) InterfaceTime(entrada interface{}) (saida time.Time) {
+func (p Tools) InterfaceTime(entrada interface{}) (saida time.Time) {
 	saida, _ = time.Parse("2006-01-02 15:04:05", "1900-01-01 00:00:00")
 	switch entrada := entrada.(type) {
 	case time.Time:
@@ -89,7 +89,7 @@ InterfaceString - força uma interface a retornar string
   - entrada: valor de entrada
   - saida: valor no formato [string]
 */
-func (p Converter) InterfaceInt(entrada interface{}) (saida int, err error) {
+func (p Tools) InterfaceInt(entrada interface{}) (saida int, err error) {
 	switch entrada := entrada.(type) {
 	case int32:
 		saida = int(entrada)
@@ -109,7 +109,7 @@ func (p Converter) InterfaceInt(entrada interface{}) (saida int, err error) {
 	return saida, err
 }
 
-func (p Converter) InterfaceToIntArray(input interface{}) ([]int, error) {
+func (p Tools) InterfaceToIntArray(input interface{}) ([]int, error) {
 	slice, ok := input.([]interface{})
 	if !ok {
 		return nil, fmt.Errorf("input is not a []interface{}")

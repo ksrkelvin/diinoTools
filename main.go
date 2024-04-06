@@ -9,7 +9,7 @@ import (
 type Diino struct {
 	Db        *database.DB
 	Mailler   *mail.Mailler
-	Converter *tools.Converter
+	Converter *tools.Tools
 }
 
 func New() (diino *Diino, err error) {
