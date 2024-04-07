@@ -22,9 +22,9 @@ func (p Tools) Base64Encode(str string) (strEncoded string) {
 	return base64.StdEncoding.EncodeToString([]byte(str))
 }
 
-func (p Tools) HashString(str string) (strHash string, err error) {
+func (p Tools) HashString(str string) (strHash string) {
 	strHash = hash([]byte(str))
-	return strHash, err
+	return strHash
 }
 
 func hash(b []byte) (hash string) {
