@@ -1,6 +1,7 @@
 package diinotools
 
 import (
+	"github.com/ksrkelvin/diinoTools/pkg/auth"
 	"github.com/ksrkelvin/diinoTools/pkg/database"
 	"github.com/ksrkelvin/diinoTools/pkg/mail"
 	"github.com/ksrkelvin/diinoTools/pkg/tools"
@@ -10,6 +11,7 @@ type Diino struct {
 	Db      *database.DB
 	Mailler *mail.Mailler
 	Tools   *tools.Tools
+	Auth    *auth.Auth
 }
 
 func New() (diino *Diino, err error) {
@@ -24,6 +26,19 @@ func New() (diino *Diino, err error) {
 	}
 	return newDiino, err
 
+}
+
+func (p *Diino) InitAuth(secret string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	p.Auth, err = auth.Init(secret)
+	if err != nil {
+		return err
+	}
+	return
 }
 
 func (p *Diino) InitDb(host string, port string, dbName string, user string, pass string) (err error) {

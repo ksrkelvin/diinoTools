@@ -1,12 +1,14 @@
 package database
 
 import (
+	"github.com/ksrkelvin/diinoTools/pkg/tools"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 type DB struct {
-	Db *gorm.DB
+	Db    *gorm.DB
+	tools tools.Tools
 }
 
 func Init(host string, port string, dbName string, user string, pass string) (conn *DB, err error) {
@@ -22,7 +24,8 @@ func Init(host string, port string, dbName string, user string, pass string) (co
 	}
 
 	newConn := &DB{
-		Db: db,
+		Db:    db,
+		tools: tools.Tools{},
 	}
 
 	return newConn, err

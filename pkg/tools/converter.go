@@ -52,6 +52,8 @@ func (p Tools) InterfaceString(entrada interface{}) (saida string) {
 		saida = strconv.Itoa(int(entrada))
 	case int:
 		saida = strconv.Itoa(entrada)
+	case uint:
+		saida = strconv.Itoa(int(entrada))
 	case float32:
 		saida = strconv.FormatFloat(float64(entrada), 'f', -1, 32)
 	case float64:
