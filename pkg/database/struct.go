@@ -2,50 +2,50 @@ package database
 
 import (
 	"context"
+	"errors"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	"github.com/ksrkelvin/diinoTools/pkg/database/gorm"
+	"github.com/ksrkelvin/diinoTools/pkg/database/mongo"
 )
 
 // DB - Main struct for DB
 type DB struct {
-	Mysql *gorm.DB
-	Mongo *mongo.Client
+	Gorm  *gorm.DB
+	Mongo *mongo.DB
 }
 
-// InitMySQL - Initialize the MySQL connection
-func InitMySQL(host string, port string, dbName string, user string, pass string) (conn *gorm.DB, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	uri := user + ":" + pass + "@tcp(" + host + ":" + port + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
-	newConn, err := gorm.Open(mysql.Open(uri), &gorm.Config{})
-	if err != nil {
-		return conn, err
-	}
+// InitDB - Initialize the database connection
+func InitDB(uriMongo string, host string, port string, dbName string, user string, pass string, sqlType string) (conn *DB, err error) {
+	newConn := &DB{}
 
-	return newConn, err
+	if uriMongo != "" {
+		newConn.Mongo, err = mongo.InitMongoDB(uriMongo)
+		if err != nil {
+			return conn, err
+		}
+	}
+	if host != "" && port != "" && dbName != "" && user != "" && pass != "" {
+		newConn.Gorm, err = gorm.InitGorm(sqlType, host, port, dbName, user, pass)
+		if err != nil {
+			return conn, err
+		}
+	}
+	if newConn.Mongo == nil && newConn.Gorm == nil {
+		err = errors.New("No database connection was initialized")
+	}
+	return
 }
 
-// InitMongoDB - Initialize the MongoDB connection
-func InitMongoDB(uriMongo string) (conn *mongo.Client, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
+// Close - Close the database connection
+func (p *DB) Close() {
+	if p.Gorm != nil {
+		sqlDB, err := p.Gorm.DB.DB()
+		if err != nil {
+			return
 		}
-	}()
-	// Use the SetServerAPIOptions() method to set the version of the Stable API on the client
-	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	opts := options.Client().ApplyURI(uriMongo).SetServerAPIOptions(serverAPI)
-	// Create a new client and connect to the server
-	newConn, err := mongo.Connect(context.TODO(), opts)
-	if err != nil {
-		panic(err)
+		sqlDB.Close()
 	}
-
-	return newConn, err
+	if p.Mongo != nil {
+		p.Mongo.Disconnect(context.Background())
+	}
 }

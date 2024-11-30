@@ -1,11 +1,11 @@
 package mail
 
+import mail "github.com/xhit/go-simple-mail/v2"
+
 // Mailler - Main struct for Mailler
 type Mailler struct {
-	Host     string `json:"host"`
-	Port     int    `json:"port"`
-	Username string `json:"username"`
-	Password string `json:"password"`
+	User   string
+	Server *mail.SMTPServer
 }
 
 // Init - Initialize the mail connection
@@ -16,11 +16,15 @@ func Init(host string, port int, user string, pass string) (mailler *Mailler, er
 		}
 	}()
 
+	server := mail.NewSMTPClient()
+	server.Host = host
+	server.Port = port
+	server.Username = user
+	server.Password = pass
+	server.Encryption = mail.EncryptionSSLTLS
+
 	newMailler := &Mailler{
-		Host:     host,
-		Port:     port,
-		Username: user,
-		Password: pass,
+		Server: server,
 	}
 
 	return newMailler, err

@@ -44,20 +44,13 @@ func (p *Mailler) send(to []string, cc []string, cco []string, subject string, b
 		}
 	}()
 
-	server := mail.NewSMTPClient()
-	server.Host = p.Host
-	server.Port = p.Port
-	server.Username = p.Username
-	server.Password = p.Password
-	server.Encryption = mail.EncryptionSSLTLS
-
-	smtpClient, err := server.Connect()
+	smtpClient, err := p.Server.Connect()
 	if err != nil {
 		return err
 	}
 
 	email := mail.NewMSG()
-	email.SetFrom(p.Username)
+	email.SetFrom(p.User)
 	email.AddTo(to...)
 	email.AddCc(cc...)
 	if cco != nil {
@@ -72,6 +65,7 @@ func (p *Mailler) send(to []string, cc []string, cco []string, subject string, b
 	if err != nil {
 		return err
 	}
+	smtpClient.Close()
 
 	return err
 }

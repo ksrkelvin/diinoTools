@@ -1,18 +1,18 @@
 package diinotools
 
 import (
-	"errors"
-
 	"github.com/ksrkelvin/diinoTools/pkg/database"
 	"github.com/ksrkelvin/diinoTools/pkg/mail"
+	"github.com/ksrkelvin/diinoTools/pkg/security"
 	"github.com/ksrkelvin/diinoTools/pkg/tools"
 )
 
 // Diino - Main struct for DiinoTools
 type Diino struct {
-	Db      *database.DB
-	Mailler *mail.Mailler
-	Tools   *tools.Tools
+	Db       *database.DB
+	Mailler  *mail.Mailler
+	Tools    *tools.Tools
+	Security *security.Security
 }
 
 // New - Create a new instance of DiinoTools
@@ -39,33 +39,21 @@ MongoDB Connection:
   - uriMongo: MongoDB URI
 
 Mysql Connection:
-  - host: MySQL Host
-  - port: MySQL Port
-  - dbName: MySQL Database Name
-  - user: MySQL User
-  - pass: MySQL Password
+  - host:  Host
+  - port:  Port
+  - dbName:  Database Name
+  - user:  User
+  - pass:  Password
+  - sqlType:  Type (mysql, oracle, postgres, etc)
 */
-func (p *Diino) InitDb(uriMongo string, host string, port string, dbName string, user string, pass string) (err error) {
+func (p *Diino) InitDb(uriMongo string, host string, port string, dbName string, user string, pass string, sqlType string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)
 		}
 	}()
-	if uriMongo != "" {
-		p.Db.Mongo, err = database.InitMongoDB(uriMongo)
-		if err != nil {
-			return err
-		}
-	}
-	if host != "" && port != "" && dbName != "" && user != "" && pass != "" {
-		p.Db.Mysql, err = database.InitMySQL(host, port, dbName, user, pass)
-		if err != nil {
-			return err
-		}
-	}
-	if p.Db.Mongo == nil && p.Db.Mysql == nil {
-		err = errors.New("No database connection was initialized")
-	}
+
+	p.Db, err = database.InitDB(uriMongo, host, port, dbName, user, pass, sqlType)
 
 	return
 }
@@ -82,5 +70,23 @@ func (p *Diino) InitMail(host string, port int, user string, pass string) (err e
 	if err != nil {
 		return err
 	}
+	return
+}
+
+// InitSecurity - Initialize the security connection
+func (p *Diino) InitSecurity() (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+
+	p.Security = &security.Security{}
+	return
+}
+
+// Close - Close the database connection
+func (p *Diino) Close() (err error) {
+	p.Db.Close()
 	return
 }
