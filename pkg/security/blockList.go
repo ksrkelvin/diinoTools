@@ -22,6 +22,20 @@ func (p *Security) IsProhibitedPath(path string) (isProhibited bool) {
 	return false
 }
 
+// IsBlockedIP - Verifica se o IP é blockeado
+func (p *Security) IsBlockedIP(ip string) (isProhibited bool) {
+
+	blockedIP, err := p.DB.Mongo.CheckIP(ip)
+	if err != nil {
+		log.Printf("Failed to get prohibited paths: %v", err)
+		return true
+	}
+	if blockedIP.IP != "" {
+		return true
+	}
+	return false
+}
+
 // UpsertPath - Registra um novo caminho
 func (p *Security) UpsertPath(path string) (err error) {
 	err = p.DB.Mongo.UpsertPath(path)
