@@ -17,9 +17,9 @@ func (p *Security) IsProhibitedPath(path string) (isProhibited bool) {
 		return true
 	}
 	if prohibitedPaths.Path != "" {
-		return false
+		return true
 	}
-	return true
+	return false
 }
 
 // UpsertPath - Registra um novo caminho
