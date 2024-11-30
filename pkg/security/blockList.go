@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/ksrkelvin/diinoTools/pkg/models"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // IsProhibitedPath - Verifica se o caminho é proibido
@@ -24,7 +23,7 @@ func (p *Security) IsProhibitedPath(path string) (isProhibited bool) {
 }
 
 // BlockIP - Bloqueia o IP
-func (p *Security) BlockIP(ip, path string, client *mongo.Client) (err error) {
+func (p *Security) BlockIP(ip, path string) (err error) {
 
 	ipToBlock := models.BlockedIPsStruct{
 		IP:        ip,
