@@ -33,7 +33,7 @@ func InitDB(uriMongo string, host string, port string, dbName string, user strin
 	if newConn.Mongo == nil && newConn.Gorm == nil {
 		err = errors.New("No database connection was initialized")
 	}
-	return
+	return newConn, err
 }
 
 // Close - Close the database connection
