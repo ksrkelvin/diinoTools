@@ -37,12 +37,3 @@ func (p *Security) BlockIP(ip, path string, client *mongo.Client) (err error) {
 	}
 	return
 }
-
-// ValidateConnection - Valida a conexão
-func (p *Security) ValidateConnection(ip, path string) (isBlocked bool) {
-	if p.IsProhibitedPath(path) {
-		p.BlockIP(ip, path, p.DB.Mongo.Client)
-		return true
-	}
-	return false
-}
