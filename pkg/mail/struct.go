@@ -1,5 +1,6 @@
 package mail
 
+// Mailler - Main struct for Mailler
 type Mailler struct {
 	Host     string `json:"host"`
 	Port     int    `json:"port"`
@@ -7,6 +8,7 @@ type Mailler struct {
 	Password string `json:"password"`
 }
 
+// Init - Initialize the mail connection
 func Init(host string, port int, user string, pass string) (mailler *Mailler, err error) {
 	defer func() {
 		if r := recover(); r != nil {

@@ -6,6 +6,7 @@ import (
 	mail "github.com/xhit/go-simple-mail/v2"
 )
 
+// SendOne - Send an email to one recipient
 func (p *Mailler) SendOne(mail string, subject string, body string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -16,7 +17,7 @@ func (p *Mailler) SendOne(mail string, subject string, body string) (err error) 
 	return
 }
 
-// send type: CC to copy, CCO to copy hidden
+// SendMany - Send an email to multiple recipients
 func (p *Mailler) SendMany(mail []string, sendType string, subject string, body string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -35,6 +36,7 @@ func (p *Mailler) SendMany(mail []string, sendType string, subject string, body 
 	return
 }
 
+// Send - Send an email
 func (p *Mailler) send(to []string, cc []string, cco []string, subject string, body string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
