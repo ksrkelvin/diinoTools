@@ -8,4 +8,6 @@ const (
 	ProhibitedPathsCollection = "prohibitedPaths"
 	//BlocklistCollection - blocklisted ips collection name
 	BlocklistCollection = "blocklistedIPS"
+	//PathsCollection - paths collection name
+	PathsCollection = "paths"
 )
