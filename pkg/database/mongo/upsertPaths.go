@@ -29,7 +29,7 @@ func (p *DB) UpsertPath(path string) error {
 			"timestamp": time.Now(), // Atualiza o timestamp
 		},
 		"$setOnInsert": bson.M{
-			"isProhibited": true, // Define apenas na inserção
+			"isProhibited": false, // Define apenas na inserção
 		},
 	}
 	// Opções de upsert
