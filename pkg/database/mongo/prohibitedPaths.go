@@ -12,16 +12,16 @@ import (
 )
 
 // GetProhibitedPaths - GetProhibitedPaths
-func (p *DB) GetProhibitedPaths(path string) (prohibitedPaths models.ProhibitedPathsStruct, err error) {
+func (p *DB) GetProhibitedPaths(path string) (prohibitedPaths models.PathsStruct, err error) {
 	db := p.Database(models.SecurtyDatabase)
 
-	prohibitedPathsCollection := db.Collection(models.ProhibitedPathsCollection)
+	pathsCollection := db.Collection(models.PathsCollection)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	filter := bson.M{"path": path}
-	err = prohibitedPathsCollection.FindOne(ctx, filter).Decode(&prohibitedPaths)
+	err = pathsCollection.FindOne(ctx, filter).Decode(&prohibitedPaths)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			fmt.Println("path not found!")

@@ -16,7 +16,7 @@ func (p *Security) IsProhibitedPath(path string) (isProhibited bool) {
 		log.Printf("Failed to get prohibited paths: %v", err)
 		return true
 	}
-	if prohibitedPaths.Path != "" {
+	if prohibitedPaths.Path != "" && prohibitedPaths.IsProhibited {
 		return true
 	}
 	return false
