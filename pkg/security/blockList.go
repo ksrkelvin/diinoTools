@@ -23,13 +23,13 @@ func (p *Security) IsProhibitedPath(path string) (isProhibited bool) {
 }
 
 // UpsertPath - Registra um novo caminho
-func (p *Security) UpsertPath(path string) (isBlocked bool) {
-	err := p.DB.Mongo.UpsertPath(path)
+func (p *Security) UpsertPath(path string) (err error) {
+	err = p.DB.Mongo.UpsertPath(path)
 	if err != nil {
 		log.Printf("Failed to insert path: %v", err)
-		return true
+		return err
 	}
-	return false
+	return err
 }
 
 // BlockIP - Bloqueia o IP
