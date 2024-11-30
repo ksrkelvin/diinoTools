@@ -81,7 +81,7 @@ func (p *Diino) InitSecurity() (err error) {
 		}
 	}()
 
-	p.Security = &security.Security{}
+	p.Security = security.InitSecurity(p.Db)
 	return
 }
 
