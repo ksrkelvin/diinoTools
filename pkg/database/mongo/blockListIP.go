@@ -6,9 +6,11 @@ import (
 	"time"
 
 	"github.com/ksrkelvin/diinoTools/pkg/models"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// BlockIP -  Bloqueia o IP
+// BlockIP - Bloqueia o IP
 func (p *DB) BlockIP(blockIP models.BlockedIPsStruct) (err error) {
 	db := p.Database(models.SecurtyDatabase)
 
@@ -17,7 +19,16 @@ func (p *DB) BlockIP(blockIP models.BlockedIPsStruct) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	_, err = blocklistCollection.InsertOne(ctx, blockIP)
+	// Create a filter to check if the IP already exists
+	filter := bson.M{"ip": blockIP.IP} // Assuming blockIP has an IP field to check
+
+	update := bson.M{"$set": blockIP}
+
+	opts := options.Update().SetUpsert(true) // Upsert flag
+
+	// Use UpdateOne with the upsert option set to true
+	_, err = blocklistCollection.UpdateOne(ctx, filter, update, opts)
+
 	if err != nil {
 		log.Printf("Failed to block IP: %v", err)
 	}
