@@ -28,9 +28,6 @@ func (p *DB) UpsertPath(path string) error {
 		"$set": bson.M{
 			"timestamp": time.Now(), // Atualiza o timestamp
 		},
-		"$setOnInsert": bson.M{
-			"timestamp": time.Now(), // Define apenas na inserção
-		},
 	}
 	// Opções de upsert
 	opts := options.FindOneAndUpdate().SetUpsert(true).SetReturnDocument(options.After)
