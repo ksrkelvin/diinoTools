@@ -1,6 +1,7 @@
 package diinotools
 
 import (
+	"github.com/ksrkelvin/diinoTools/pkg/auth"
 	"github.com/ksrkelvin/diinoTools/pkg/database"
 	"github.com/ksrkelvin/diinoTools/pkg/mail"
 	"github.com/ksrkelvin/diinoTools/pkg/security"
@@ -12,6 +13,7 @@ type Diino struct {
 	Db       *database.DB
 	Mailler  *mail.Mailler
 	Tools    *tools.Tools
+	Auth     *auth.Auth
 	Security *security.Security
 }
 
@@ -82,6 +84,18 @@ func (p *Diino) InitSecurity() (err error) {
 	}()
 
 	p.Security = security.InitSecurity(p.Db)
+	return
+}
+
+// InitAuth - Initialize the auth connection
+func (p *Diino) InitAuth(secret string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+
+	p.Auth, err = auth.Init(secret)
 	return
 }
 
