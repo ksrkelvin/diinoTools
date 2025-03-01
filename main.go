@@ -15,7 +15,7 @@ type Diino struct {
 	Db       *database.DB
 	Mailler  *mail.Mailler
 	Tools    *tools.Tools
-	Auth     *auth.Auth
+	Auth     *auth.JWT
 	Security *security.Security
 }
 
@@ -98,8 +98,8 @@ func (p *Diino) InitSecurity() (err error) {
 	return
 }
 
-// InitAuth - Initialize the auth connection
-func (p *Diino) InitAuth(secret string) (err error) {
+// InitJWT - Initialize the auth connection
+func (p *Diino) InitJWT(secret string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)

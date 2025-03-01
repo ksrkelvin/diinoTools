@@ -1,46 +1,48 @@
 package auth
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-// TokenGen - token Generator
-func (p *Auth) TokenGen(userInfo interface{}) (token string, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		Issuer:    p.tools.InterfaceString(userInfo),
-		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), //1day
-	})
-	token, err = claims.SignedString([]byte(p.Secret))
-
-	return token, err
-
-}
-
-// CheckToken - token validator
-func (p *Auth) CheckToken(token string) (userInfo string, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = r.(error)
-		}
-	}()
-
-	tokenJwt, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(p.Secret), nil
-	})
-	if err != nil {
-		return userInfo, err
+// GenerateJWT - Função para gerar o JWT
+func (p *JWT) GenerateJWT(email string) (string, error) {
+	expirationTime := time.Now().Add(24 * time.Hour) // O token expira após 24 horas
+	claims := &Claims{
+		Email: email,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+			Issuer:    "encontradev",
+		},
 	}
 
-	claims := tokenJwt.Claims.(*jwt.StandardClaims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(p.Secret)
+	if err != nil {
+		return "", err
+	}
 
-	userInfo = claims.Issuer
+	return tokenString, nil
+}
 
-	return
+// ValidateJWT - Função para validar o JWT e extrair os dados do usuário
+func (p *JWT) ValidateJWT(tokenString string) (*Claims, error) {
+	claims := &Claims{}
+
+	// Parse e valida o token
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		// Verifica o método de assinatura
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("invalid signing method")
+		}
+		return p.Secret, nil
+	})
+
+	if err != nil || !token.Valid {
+		return nil, err
+	}
+
+	return claims, nil
 }
