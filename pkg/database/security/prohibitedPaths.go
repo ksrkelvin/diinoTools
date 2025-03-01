@@ -1,4 +1,4 @@
-package mongo
+package security
 
 import (
 	"context"
@@ -13,9 +13,12 @@ import (
 
 // GetProhibitedPaths - GetProhibitedPaths
 func (p *DB) GetProhibitedPaths(path string) (prohibitedPaths models.PathsStruct, err error) {
-	db := p.Database(models.SecurtyDatabase)
-
-	pathsCollection := db.Collection(models.PathsCollection)
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	pathsCollection := p.db.Collection(models.PathsCollection)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

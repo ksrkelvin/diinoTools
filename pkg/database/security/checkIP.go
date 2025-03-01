@@ -1,4 +1,4 @@
-package mongo
+package security
 
 import (
 	"context"
@@ -13,9 +13,12 @@ import (
 
 // CheckIP - GetCheckIP
 func (p *DB) CheckIP(ip string) (prohibitedPaths models.BlockedIPsStruct, err error) {
-	db := p.Database(models.SecurtyDatabase)
-
-	BlocklistCollection := db.Collection(models.BlocklistCollection)
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	BlocklistCollection := p.db.Collection(models.BlocklistCollection)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

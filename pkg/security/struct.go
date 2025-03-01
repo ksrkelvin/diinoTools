@@ -1,15 +1,30 @@
 package security
 
-import "github.com/ksrkelvin/diinoTools/pkg/database"
+import (
+	"github.com/ksrkelvin/diinoTools/pkg/database/mongo"
+	securityDB "github.com/ksrkelvin/diinoTools/pkg/database/security"
+)
 
 // Security - Main struct for Security
 type Security struct {
-	DB *database.DB
+	DB *securityDB.DB
 }
 
 // InitSecurity - Initialize the security connection
-func InitSecurity(db *database.DB) (conn *Security) {
-	return &Security{
-		DB: db,
+func InitSecurity(db *mongo.DB) (security *Security, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	dbSecurity, err := securityDB.Init(db.Client)
+	if err != nil {
+		return security, err
 	}
+
+	newSecurity := &Security{
+		DB: dbSecurity,
+	}
+
+	return newSecurity, err
 }

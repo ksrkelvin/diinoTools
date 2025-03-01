@@ -10,10 +10,11 @@ import (
 // DB - MongoDB
 type DB struct {
 	*mongo.Client
+	Base *mongo.Database
 }
 
-// InitMongoDB - Initialize the MongoDB connection
-func InitMongoDB(uriMongo string) (conn *DB, err error) {
+// Init - Initialize the MongoDB connection
+func Init(uriMongo string) (conn *DB, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)
@@ -33,4 +34,16 @@ func InitMongoDB(uriMongo string) (conn *DB, err error) {
 	}
 
 	return conn, err
+}
+
+// UseBase - Use a specific database
+func (p *DB) UseBase(baseName string) (base *mongo.Database, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	p.Base = p.Database(baseName)
+	return
+
 }

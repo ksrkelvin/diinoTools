@@ -50,28 +50,24 @@ Mysql Connection:
   - pass:  Password
   - sqlType:  Type (mysql, oracle, postgres, etc)
 */
-func (p *Diino) InitDb(uriMongo string, host string, port string, dbName string, user string, pass string, sqlType string) (err error) {
+func (p *Diino) InitDb(uriMongo string) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(error)
 		}
 	}()
 
-	if uriMongo == "" && (host == "" || port == "" || dbName == "" || user == "" || pass == "" || sqlType == "") {
+	if uriMongo == "" {
 		err = errors.New("No database connection was initialized")
 		return
 	}
 
 	if uriMongo != "" {
-		p.Db.Mongo, err = database.InitMongoDB(uriMongo)
+		p.Db, err = database.InitMongoDB(uriMongo)
 		if err != nil {
 			return
 		}
-	} else {
-		p.Db.Gorm, err = database.InitSQL(host, port, dbName, user, pass, sqlType)
-
 	}
-
 	return
 }
 
@@ -98,7 +94,7 @@ func (p *Diino) InitSecurity() (err error) {
 		}
 	}()
 
-	p.Security = security.InitSecurity(p.Db)
+	p.Security, err = security.InitSecurity(p.Db.Mongo)
 	return
 }
 

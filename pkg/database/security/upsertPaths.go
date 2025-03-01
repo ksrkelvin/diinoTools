@@ -1,4 +1,4 @@
-package mongo
+package security
 
 import (
 	"context"
@@ -10,11 +10,13 @@ import (
 )
 
 // UpsertPath - Função para realizar o upsert de um path
-func (p *DB) UpsertPath(path string) error {
-
-	db := p.Database(models.SecurtyDatabase)
-
-	pathsCollection := db.Collection(models.PathsCollection)
+func (p *DB) UpsertPath(path string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	pathsCollection := p.db.Collection(models.PathsCollection)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -38,7 +40,7 @@ func (p *DB) UpsertPath(path string) error {
 	// Executa o upsert
 	// Resultado será decodificado na struct
 	var updatedDoc models.PathsStruct
-	err := pathsCollection.FindOneAndUpdate(ctx, filter, update, opts).Decode(&updatedDoc)
+	err = pathsCollection.FindOneAndUpdate(ctx, filter, update, opts).Decode(&updatedDoc)
 	if err != nil {
 		return err
 	}
