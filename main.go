@@ -1,6 +1,8 @@
 package diinotools
 
 import (
+	"errors"
+
 	"github.com/ksrkelvin/diinoTools/pkg/auth"
 	"github.com/ksrkelvin/diinoTools/pkg/database"
 	"github.com/ksrkelvin/diinoTools/pkg/mail"
@@ -55,7 +57,20 @@ func (p *Diino) InitDb(uriMongo string, host string, port string, dbName string,
 		}
 	}()
 
-	p.Db, err = database.InitDB(uriMongo, host, port, dbName, user, pass, sqlType)
+	if uriMongo == "" && (host == "" || port == "" || dbName == "" || user == "" || pass == "" || sqlType == "") {
+		err = errors.New("No database connection was initialized")
+		return
+	}
+
+	if uriMongo != "" {
+		p.Db.Mongo, err = database.InitMongoDB(uriMongo)
+		if err != nil {
+			return
+		}
+	} else {
+		p.Db.Gorm, err = database.InitSQL(host, port, dbName, user, pass, sqlType)
+
+	}
 
 	return
 }
