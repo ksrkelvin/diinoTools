@@ -24,6 +24,7 @@ func Init(host string, port int, user string, pass string) (mailler *Mailler, er
 	server.Encryption = mail.EncryptionSSLTLS
 
 	newMailler := &Mailler{
+		User:   user,
 		Server: server,
 	}
 
