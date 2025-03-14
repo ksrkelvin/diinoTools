@@ -8,7 +8,6 @@ require (
 )
 
 require (
-	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/go-test/deep v1.1.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
@@ -24,11 +23,7 @@ require (
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/shopspring/decimal v1.3.1
 	github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208 // indirect
 	go.mongodb.org/mongo-driver v1.17.1
-	gorm.io/driver/mysql v1.5.6
-	gorm.io/gorm v1.25.9
 )
